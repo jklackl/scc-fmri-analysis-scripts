@@ -22,12 +22,16 @@ Feel free to use, modify, and adapt these scripts for your own research.
 ## Workflow
 1. **run_1_fmriprep.sh** – Run fMRIPrep on a BIDS dataset.
 2. **run_2_smooth.sh** – Smooth functional images using BIDSPM.
-3. **run_3_1stlevel.sh** – Run first-level statistical analyses using BIDSPM.
-Second-level analyses are currently performed manually in the SPM GUI.
+3. **run_3_create_default_model.sh** – Create a model JSON file for statistical analysis.
+4. **run_4_bidspm_1stlevel.sh** – Run first-level statistical analyses using BIDSPM.
+5. **run_5_bidspm_2ndlevel.sh** – Run second-level statistical analyses using BIDSPM.
 
 ## How to run the scripts
-- Go to the folder in which the script is located and run them with sbatch, e.g.,
+- Go to the folder in which the script is located
+- Edit the scripts and adapt them to your project. Think of paths, subject numbers, your desired smoothing kernel, etc.
+- Run the scripts using, e.g.,
   $ sbatch run_1_fmriprep.sh
+- You may run several or all subjects in parallel, but keep in mind that for every subject, you must follow the sequence (i.e., you can only smooth after fmriprep)
 - Every now and then, check whether the jobs are actually running
   $ squeue -u your-user-name
 - Every now and then, check the content of the logfiles and error logs, e.g.,
@@ -35,7 +39,9 @@ Second-level analyses are currently performed manually in the SPM GUI.
 - Check the output directories for output files:
   /mnt/ceph/groups_hdd/SCCGroup/your-group/your-study-folder/your-bids-dataset/derivatives/fmriprep (output of script 1)
   /mnt/ceph/groups_hdd/SCCGroup/your-group/your-study-folder/your-bids-dataset/derivatives/bids-preproc (output of script 2)
-  /mnt/ceph/groups_hdd/SCCGroup/your-group/your-study-folder/your-bids-dataset/derivatives/bids-stat (output of script 3)
+  /mnt/ceph/groups_hdd/SCCGroup/social_psychology/the-prospective-brain/the-prospective-brain-main/derivatives/models/model-default<task>_smdl.json (output of script 3)
+  /mnt/ceph/groups_hdd/SCCGroup/your-group/your-study-folder/your-bids-dataset/derivatives/bidspm-stats (output of script 4)
+- Make sure to edit the model json file that results from step/script 3 according to your needs (e.g., define the conditions and contrasts)
 
 ## Disclaimer
 These scripts were developed for my personal workflow on the University of Salzburg HPC cluster. They may contain errors. Always verify analysis settings and outputs before using them.
