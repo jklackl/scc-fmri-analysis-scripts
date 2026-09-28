@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=bidspm_smooth
-#SBATCH --array=1-20
+#SBATCH --array=0-20
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=64G
 #SBATCH --time=24:00:00
@@ -17,7 +17,14 @@ RAW_BIDS="/mnt/ceph/groups_hdd/SCCGroup/social_psychology/the-prospective-brain/
 
 FMRIPREP="${RAW_BIDS}/derivatives/fmriprep"
 
-SMOOTH="${RAW_BIDS}/derivatives/smooth"
+# By default, this script puts the smoothed data into a parallel derivative in the main BIDS folder (i.e., a folder called bidspm-preproc next to the original fmriprep folder). 
+# If you want things to be nested (i.e., a BIDS folder in a BIDS folder in a BIDS folder etc.), change the output folder to e.g., SMOOTH (see below).
+
+# To declutter, I run 
+# rm /mnt/ceph/groups_hdd/SCCGroup/social_psychology/the-prospective-brain/the-prospective-brain-main/derivatives/bidspm-preproc/sub-0*/ses-0*/func/sub-0*_ses-0*_task-ima_space-MNI152NLin2009cAsym_desc-preproc_bold.* # to remove the doubled non-smoothed, preprocessed data in the bidspm-preproc folder
+# rm -r /mnt/ceph/groups_hdd/SCCGroup/social_psychology/the-prospective-brain/the-prospective-brain-main/derivatives/bidspm-preproc/sub-0*/anat # to remove the anat smoothed and unsmoothed anat files in the bidspm-preproc folder
+
+SMOOTH="${RAW_BIDS}/derivatives/bidspm_smooth"
 
 PARTICIPANTS=(
 001
@@ -57,7 +64,7 @@ apptainer exec \
   "$SIF" \
   bidspm \
   "$FMRIPREP" \
-  "$FMRIPREP" \
+  "$RAW_BIDS" \
   subject \
   smooth \
   --participant_label "$SUB" \

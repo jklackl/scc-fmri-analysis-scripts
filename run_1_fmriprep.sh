@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=fmriprep
-#SBATCH --array=16-16 # Total number should match number of subjects (e.g., 1-20 -> subjects 1-20); try single subjects with something like '1-1'
-#SBATCH --cpus-per-task=24
+#SBATCH --array=0-20%4
+#SBATCH --cpus-per-task=24 # IMPORTANT: Adjust #SBATCH --array=0-(N-1) whenever subjects are added or removed.
 #SBATCH --mem=64G
 #SBATCH --time=48:00:00
 #SBATCH --output=logs/fmriprep_%A_%a_out.log
@@ -9,8 +9,41 @@
 
 set -euo pipefail
 
-SUBJECT=$(sed -n "${SLURM_ARRAY_TASK_ID}p" \
-/mnt/ceph/groups_hdd/SCCGroup/social_psychology/the-prospective-brain/subjects.txt)
+# ==========================================
+# Edit this list as needed
+# ==========================================
+SUBJECTS=(
+sub-001
+sub-002
+sub-003
+sub-004
+sub-005
+sub-006
+sub-007
+sub-008
+sub-009
+sub-010
+sub-011
+sub-012
+sub-013
+sub-014
+sub-015
+sub-016 # uncomment and reduce array size if needed 
+sub-017
+sub-018
+sub-019
+sub-020
+sub-021
+)
+
+SUBJECT=${SUBJECTS[$SLURM_ARRAY_TASK_ID]}
+
+if [ "$SLURM_ARRAY_TASK_ID" -ge "${#SUBJECTS[@]}" ]; then
+    echo "Error: SLURM_ARRAY_TASK_ID=$SLURM_ARRAY_TASK_ID exceeds subject list length (${#SUBJECTS[@]})."
+    exit 1
+fi
+
+echo "Running subject: $SUBJECT"
 
 FMRIPREP_IMG=/home/scc_e_330386/containers/fmriprep_sandbox
 
@@ -22,7 +55,7 @@ FS_LICENSE=/home/scc_e_330386/freesurfer/license.txt
 WORKDIR=${TMPDIR:-/tmp}/${SUBJECT}_fmriprep
 
 mkdir -p "$WORKDIR"
-trap 'rm -rf "$WORKDIR"' EXIT  # This guarantees cleanup even when a step fails.
+trap 'rm -rf "$WORKDIR"' EXIT
 
 mkdir -p "$OUT_DIR"
 
