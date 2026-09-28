@@ -1,4 +1,4 @@
-# SCC fMRI easy analysis scripts
+# SCC fMRI analysis scripts
 
 A collection of scripts for fMRI data preprocessing and analysis on the University of Salzburg HPC cluster. The workflow is designed for BIDS-compliant datasets and aims to provide a relatively standardized analysis pipeline with minimal user intervention. 
 The scripts leverage the cluster's computing resources to parallelize processing wherever possible and thereby reduce overall analysis time. One exception is the fMRIPrep preprocessing step: running too many subjects simultaneously can lead to race-condition issues, particularly during the FreeSurfer analysis step within fMRIPrep. To avoid this, the provided fMRIPrep script is configured to run a maximum of four subjects in parallel.
