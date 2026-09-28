@@ -4,6 +4,11 @@ A collection of scripts for fMRI data preprocessing and analysis on the Universi
 The scripts leverage the cluster's computing resources to parallelize processing wherever possible and thereby reduce overall analysis time. One exception is the fMRIPrep preprocessing step: running too many subjects simultaneously can lead to race-condition issues, particularly during the FreeSurfer analysis step within fMRIPrep. To avoid this, the provided fMRIPrep script is configured to run a maximum of four subjects in parallel.
 Feel free to use, modify, and adapt these scripts for your own research.
 
+These scripts use fMRIPrep and BIDSPM.
+fMRIPrep is a standardized preprocessing pipeline for functional MRI (fMRI) data. It takes raw (f)MRI data in BIDS format and automatically performs the major processing steps required before statistical analysis, such as correcting for head motion, aligning functional and anatomical images, removing non-brain tissue, segmenting different tissue types, and transforming the data into a standard brain space.
+BIDSPM is a framework that combines the Brain Imaging Data Structure (BIDS) with the statistical analysis tools provided by SPM (Statistical Parametric Mapping). While fMRIPrep focuses on preparing raw MRI data for analysis, BIDSPM focuses on organizing, running, and documenting the actual analyses. It can automatically find the appropriate files, construct first-level and second-level models, run analyses in SPM, and store the results in a structured and reproducible manner. This reduces the amount of manual scripting that is often required in traditional SPM workflows.
+The scripts presented here provide a way to use fMRIPrep and BIDSPM on datasets. fMRIPrep produces preprocessed fMRI data, and BIDSPM then uses those data to perform tasks such as spatial smoothing, model specification, parameter estimation, contrast estimation, and subject-level and group-level analyses. 
+
 ## Before You Start
 - Ensure sufficient disk space. fMRIPrep outputs can easily require hundreds of GB.
 - Extract your BIDS dataset (if it is compressed), e.g.:
